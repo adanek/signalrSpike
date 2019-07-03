@@ -101,7 +101,7 @@ namespace Client
             catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
 
 
@@ -113,7 +113,7 @@ namespace Client
 
         private static Task C_Closed(Exception arg)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

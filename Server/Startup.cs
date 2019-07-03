@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Server.Services;
 
 namespace Server
 {
@@ -29,15 +31,19 @@ namespace Server
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 ;
+            services.AddSingleton<IClaimsTransformation, ClaimsTransformation>();
 
             services.AddAuthentication("Bearer")
             .AddJwtBearer("Bearer", options =>
             {
                 options.Authority = "https://localhost:5001";
                 options.RequireHttpsMetadata = true;
-        
+
                 options.Audience = "Chat";
             });
+
+            services.AddPolicyServerClient(Configuration.GetSection("Policy"))
+                .AddAuthorizationPermissionPolicies();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +61,7 @@ namespace Server
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
+            app.UsePolicyServerClaims();
             app.UseSignalR(c =>
             {
                 c.MapHub<ChatHub>("/chat");

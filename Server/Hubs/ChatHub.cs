@@ -24,7 +24,7 @@ namespace Server
             return Task.CompletedTask;
         }
 
-        [Authorize]
+        [Authorize("PerformSurgery")]
         public Task<string> Echo2 (string message)
         {
             return Task.FromResult(message);
