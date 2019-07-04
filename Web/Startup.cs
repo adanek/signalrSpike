@@ -45,6 +45,7 @@ namespace Web
                 .AddCookie("Cookies")
                 .AddOpenIdConnect("oidc", options =>
                 {
+                    options.SignInScheme = "Cookies";
                     options.Authority = "https://localhost:5001";
                     options.RequireHttpsMetadata = true;
 
